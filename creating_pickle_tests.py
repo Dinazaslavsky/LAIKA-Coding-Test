@@ -1,3 +1,8 @@
+# Written by Dina Zaslavsky
+# For Challenge 1 of LAIKA Coding Test
+
+# This program creates pickle files that are purposely not as they should be based on the test_data.pkl file
+
 import cPickle as pickle
 import copy
 
@@ -46,6 +51,18 @@ def create_unexpected_type(data):
     outfile = open("test_data_unexpected_type.pkl", 'wb')
     pickle.dump(unexpected_type, outfile)
 
+# reorders some of the data to make it not chronological
+# saves as test_data_unordered.pkl
+def create_unordered(data):
+    unordered = copy.deepcopy(data)
+    temp = unordered[0]
+    unordered[0] = unordered[1]
+    unordered[1] = temp
+    temp = unordered[4]
+    unordered[4] = unordered[6]
+    unordered[6] = temp
+    outfile = open("test_data_unordered.pkl", 'wb')
+    pickle.dump(unordered, outfile)
 
 def main():
 
@@ -61,6 +78,7 @@ def main():
     create_missing_data(data)
     create_incorrect_key(data)
     create_unexpected_type(data)
+    create_unordered(data)
 
 
 if __name__ == '__main__':

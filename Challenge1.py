@@ -1,3 +1,10 @@
+# Written by Dina Zaslavsky
+# For LAIKA Coding Test
+
+# This program exports data from a pickle file to Microsoft Excel. It exports the Task Name, Set Part Name, Parent
+# Build Name, Start Date and End Date. It is sorted by earliest Start Date first and if a Due Date has already passed
+# the entire row is shaded red in Excel
+
 import cPickle as pickle
 import datetime
 from openpyxl import Workbook
@@ -46,15 +53,19 @@ def past_due_date(ws, item, i):
                     cell.fill = styles.fills.PatternFill(fgColor='FF0000', fill_type='solid')
 
 
+def get_start_date(item):
+    return item["start_date"]
+
 def main():
 
     # Testing: First run creating_pickle_tests.py
     # Change one testing boolean to True per run
     # Excel file should have empty slots where the data in the pickle file was incorrect
-    testing_empty = False   # test for empty pickle file
-    testing_keys = False    # test for the keys to be as expected
-    testing_types = False   # test for the types to be as expected (always string except for the set part may be a list)
-    testing_values = False  # test for if values are missing
+    testing_empty = False      # test for empty pickle file
+    testing_keys = False       # test for the keys to be as expected
+    testing_types = False      # test for the types to be as expected (always string except for set part may be a list)
+    testing_values = False     # test for if values are missing
+    testing_unordered = False  # test for if the data is not in chronological order based on start date
     if testing_empty:
         file_name = "test_data_empty.pkl"
     elif testing_keys:
@@ -63,6 +74,8 @@ def main():
         file_name = "test_data_unexpected_type.pkl"
     elif testing_values:
         file_name = "test_data_values_missing.pkl"
+    elif testing_unordered:
+        file_name = "test_data_unordered.pkl"
     else:
         file_name = "test_data.pkl"
 
@@ -73,6 +86,8 @@ def main():
     except:
         print("ERROR: Test Data Pickle File Not Found or Empty")
         return
+
+    data.sort(key=get_start_date)   # sort the data based on start date
 
     # create excel worksheet
     wb = Workbook()
